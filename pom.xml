@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.apache.kafka</groupId>
+    <artifactId>kafka-connect-soap</artifactId>
+    <name>kafka-connect-soap</name>
+    <version>0.1</version>
+    <description>A Kafka Connect plugin for SoapSinkConnector</description>
+    <url>TbD</url>
+
+    <properties>
+        <connect-runtime-version>2.0.0</connect-runtime-version>
+        <connect.formatters.version>0.2.5</connect.formatters.version>
+        <connect.templates.version>0.77.0</connect.templates.version>
+        <dependencies.dependency.version>0.77.0</dependencies.dependency.version>
+        <confluent.version>7.6.0</confluent.version>
+        <confluent.common.utils.version>5.3.2</confluent.common.utils.version>
+        <!--junit.jupiter.version>5.10.2</junit.jupiter.version-->
+        <slf4j.version>1.7.26</slf4j.version>
+        <apache.kafka.version>3.7.0</apache.kafka.version>
+        <java.version>8</java.version>
+        <kafka.connect.plugin.version>0.12.0</kafka.connect.plugin.version>
+        <compiler.plugin.version>3.8.1</compiler.plugin.version>
+        <site.plugin.version>3.7.1</site.plugin.version>
+    </properties>
+
+
+    <repositories>
+        <repository>
+            <id>confluent</id>
+            <name>Confluent</name>
+            <url>https://packages.confluent.io/maven/</url>
+        </repository>
+    </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.10.2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <excludedGroups>org.apache.kafka.test.IntegrationTest</excludedGroups>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.2.5</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-junit47</artifactId>
+                        <version>2.22.1</version>
+                    </dependency>
+                </dependencies>
+                <!--configuration>
+                    <skip>${skipIntegrationTests}</skip>
+                    <groups>org.apache.kafka.test.IntegrationTest</groups>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                </executions-->
+            </plugin>
+            <plugin>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-connect-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>kafka-connect</goal>
+                        </goals>
+                        <configuration>
+                            <title>SOAP Sink Connector</title>
+                            <name>kafka-connect-soap-sink</name>
+                            <description>
+                                A sink connector for writing to a SOAP Service
+                            </description>
+                            <logo>logos/confluent.png</logo>
+                            <documentationUrl>https://github.com/eljeko/kafka-connect-soap-sink/README.md
+                            </documentationUrl>
+                            <sourceUrl>https://github.com/eljeko/kafka-connect-soap-sink</sourceUrl>
+
+                            <supportProviderName>Community</supportProviderName>
+                            <supportSummary>
+                                <![CDATA[SOAP Sink Connector]]></supportSummary>
+                            <supportUrl>https://tbd</supportUrl>
+                            <supportLogo>logos/confluent.png</supportLogo>
+
+                            <ownerUsername>org</ownerUsername>
+                            <ownerType>organization</ownerType>
+                            <ownerName>eljeko</ownerName>
+                            <ownerUrl>https://eljeko</ownerUrl>
+
+                            <confluentControlCenterIntegration>true</confluentControlCenterIntegration>
+
+                            <componentTypes>
+                                <componentType>sink</componentType>
+                            </componentTypes>
+
+                            <tags>
+                                <tag>cloud</tag>
+                                <tag>xml</tag>
+                                <tag>data</tag>
+                                <tag>soap</tag>
+                                <tag>webservice</tag>
+                            </tags>
+
+                            <requirements>
+                                <requirement>Apache Kafka 3.x or higher / Confluent Platform 7.x or higher</requirement>
+                                <requirement>Java 11 or higher</requirement>
+                            </requirements>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+        <pluginManagement>
+            <plugins>
+                <!--plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${site.plugin.version}</version>
+                </plugin-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${compiler.plugin.version}</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>io.confluent</groupId>
+                    <artifactId>kafka-connect-maven-plugin</artifactId>
+                    <version>${kafka.connect.plugin.version}</version>
+                </plugin>
+
+            </plugins>
+
+
+        </pluginManagement>
+    </build>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>connect-api</artifactId>
+            <version>${apache.kafka.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>${apache.kafka.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20240303</version>
+        </dependency>
+
+        <!--
+        Add test dependencies for the Connect integration test framework, which requires
+        the Kafka Connect runtime, the Kafka broker, and the Kafka broker test JAR.
+        Inherit all of the versions from the parent, but customized with
+        2.1.0-cp2 and 3.4.13
+        -->
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>connect-runtime</artifactId>
+            <version>${apache.kafka.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>connect-runtime</artifactId>
+            <version>${apache.kafka.version}</version>
+            <type>test-jar</type>
+            <classifier>test</classifier>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Also include the test artifacts for Kafka clients for additional test utilities -->
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <classifier>test</classifier>
+            <type>test-jar</type>
+            <version>${apache.kafka.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13</version>
+            <scope>test</scope>
+        </dependency-->
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.9.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-connect-avro-converter</artifactId>
+            <version>${confluent.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-connect-protobuf-converter</artifactId>
+            <version>${confluent.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-connect-json-schema-converter</artifactId>
+            <version>${confluent.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-schema-registry</artifactId>
+            <version>${confluent.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-schema-registry</artifactId>
+            <version>${confluent.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- TODO: Add this dependency if tests automatically start Docker -->
+        <!--dependency>
+            <groupId>com.github.docker-java</groupId>
+            <artifactId>docker-java</artifactId>
+            <scope>test</scope>
+        </dependency-->
+
+        <!-- Inherited unnecessarily, scope to test so it's not packaged -->
+        <dependency>
+            <groupId>io.confluent</groupId>
+            <artifactId>common-utils</artifactId>
+            <version>${confluent.common.utils.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>3.6</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.19.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.confluent</groupId>
+            <artifactId>connect-test-sdk-dataloss</artifactId>
+            <version>0.1.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>4.0.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock-jre8</artifactId>
+            <version>2.28.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <!--version>${junit.jupiter.version}</version-->
+            <scope>test</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+    </dependencies>
+</project>
