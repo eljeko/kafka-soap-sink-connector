@@ -43,11 +43,11 @@ curl localhost:8083/connector-plugins|jq
 Create the topic for the connector if the strat script failed (you can change the topic partition setup based on you needs) 
 
 ```bash
-docker exec broker kafka-topics --bootstrap-server broker:9092 --create --topic messages --partitions 1 --replication-factor 1
+docker exec broker kafka-topics --bootstrap-server broker:9092 --create --topic requests --partitions 1 --replication-factor 1
 ```
 
 ```bash
-docker exec broker kafka-topics --bootstrap-server broker:9092 --create --topic replies --partitions 1 --replication-factor 1
+docker exec broker kafka-topics --bootstrap-server broker:9092 --create --topic responses --partitions 1 --replication-factor 1
 ```
 
 
@@ -64,10 +64,10 @@ curl -i -X PUT -H  "Content-Type:application/json" \
         "soap.endpoint.url": "http://acme-soap-service:8080/soap/acme",
         "xslt.file.path": "/home/transform.xslt",
         "kafka.sink.bootstrap": "broker:9092",
-        "kafka.sink.topic": "replies",
+        "kafka.sink.topic": "responses",
         "connector.class": "org.connect.soap.SoapSinkConnector",
         "value.converter": "org.apache.kafka.connect.json.JsonConverter",
-        "topics": "messages",
+        "topics": "requests",
         "file": "/tmp/test",
         "value.converter.schemas.enable": "false"
     }'
@@ -76,12 +76,12 @@ curl -i -X PUT -H  "Content-Type:application/json" \
 Wait on `replies` topic:
 
 ```
-docker exec -it broker kafka-console-consumer --bootstrap-server broker:9092  --topic replies  --property "print.key=true" --from-beginning
+docker exec -it broker kafka-console-consumer --bootstrap-server broker:9092  --topic responses  --property "print.key=true" --from-beginning
 ```
 
 Send some request on `messages` topic:
 
 ```
-jr run --embedded '{{counter "mycounter" 0 1}}*{"message":"Hello here User-{{integer 1 999}}"}' -n 10| kafka-console-producer --bootstrap-server broker:9092 --topic messages --property "key.separator=*" --property "parse.key=true"
+jr run --embedded '{{counter "mycounter" 0 1}}*{"message":"Hello here User-{{integer 1 999}}"}' -n 10| kafka-console-producer --bootstrap-server broker:9092 --topic requests --property "key.separator=*" --property "parse.key=true"
 ```
 
