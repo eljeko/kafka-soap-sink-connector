@@ -82,6 +82,6 @@ docker exec -it broker kafka-console-consumer --bootstrap-server broker:9092  --
 Send some request on `messages` topic:
 
 ```
-jr run --embedded '{{counter "mycountek" 0 1}}*{"message":"Hello here User-{{integer 1 999}}"}' -n 10| kafka-console-producer --bootstrap-server broker:9092 --topic messages --property "key.separator=*" --property "parse.key=true"
+jr run --embedded '{{counter "mycounter" 0 1}}*{"message":"Hello here User-{{integer 1 999}}"}' -n 10| kafka-console-producer --bootstrap-server broker:9092 --topic messages --property "key.separator=*" --property "parse.key=true"
 ```
 
