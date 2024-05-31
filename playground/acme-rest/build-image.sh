@@ -6,7 +6,7 @@ docker image rm acme/acme-rest-service:1.0
 
 docker ps -a|grep acme-rest-service|awk '{print "docker rm " $1}'|sh
 
-./mvn clean package
+mvn clean package
 
 echo "App built, creating image"
 

@@ -65,6 +65,7 @@ curl -i -X PUT -H  "Content-Type:application/json" \
         "xslt.file.path": "/home/transform.xslt",
         "kafka.sink.bootstrap": "broker:9092",
         "kafka.sink.topic": "responses",
+        "correlationid.header.key": "kafka_correlationId",
         "connector.class": "org.connect.soap.SoapSinkConnector",
         "value.converter": "org.apache.kafka.connect.json.JsonConverter",
         "topics": "requests",
