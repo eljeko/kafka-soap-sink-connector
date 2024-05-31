@@ -85,3 +85,4 @@ Send some request on `messages` topic:
 jr run --embedded '{{counter "mycounter" 0 1}}*{"message":"Hello here User-{{integer 1 999}}"}' -n 10| kafka-console-producer --bootstrap-server broker:9092 --topic requests --property "key.separator=*" --property "parse.key=true"
 ```
 
+echo '{"col_foo":1}'|kafkacat -b localhost:9092 -t test -P -H foo=bar

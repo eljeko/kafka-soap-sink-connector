@@ -38,7 +38,7 @@ public class HttpSoapClient {
 
         // Read the response.
         httpConn.connect();
-        System.out.println("http connection status :" + httpConn.getResponseMessage());
+        System.out.println("http connection status code "+ httpConn.getResponseCode()  +" - "  + httpConn.getResponseMessage());
         InputStreamReader isr = new InputStreamReader(httpConn.getInputStream());
         BufferedReader in = new BufferedReader(isr);
 

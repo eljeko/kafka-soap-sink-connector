@@ -25,8 +25,11 @@ public class ReplyProducer {
         this.replyTopic = replyTopic;
     }
 
-    public void sendRecord(Object key, String value) {
-        ProducerRecord<Object, String> aRecord = getSinkRecord(key, value);
+    public void sendRecord(Object key, String correlationIdKey, String correlationIdValue, String soapResponse) {
+        ProducerRecord<Object, String> aRecord = getSinkRecord(key, soapResponse);
+
+        aRecord.headers().add(correlationIdKey, correlationIdValue.getBytes());
+
         producer.send(aRecord, new ProducerCallback());
     }
 

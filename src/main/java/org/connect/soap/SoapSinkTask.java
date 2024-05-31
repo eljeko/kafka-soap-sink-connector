@@ -20,6 +20,8 @@ import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.connect.errors.ConnectException;
+import org.apache.kafka.connect.header.Header;
+import org.apache.kafka.connect.header.Headers;
 import org.apache.kafka.connect.sink.SinkRecord;
 import org.apache.kafka.connect.sink.SinkTask;
 import org.connect.soap.config.SoapSinkConfig;
@@ -40,6 +42,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -50,6 +53,7 @@ public class SoapSinkTask extends SinkTask {
 
     private String filename;
     private String soapUrl;
+    private String correlationIdKey;
     private PrintStream outputStream;
     private JsonToSoapXml jsonToXml;
     private ReplyProducer replyProducer;
@@ -81,6 +85,8 @@ public class SoapSinkTask extends SinkTask {
 
         soapUrl = config.getString(SoapSinkConnector.SOAP_ENDPOINT_URL);
 
+        correlationIdKey = config.getString(SoapSinkConnector.MESSAGE_CORRELATION_ID_KEY);
+
         filename = config.getString(SoapSinkConnector.FILE_CONFIG);
         if (filename == null || filename.isEmpty()) {
             outputStream = System.out;
@@ -104,15 +110,31 @@ public class SoapSinkTask extends SinkTask {
         for (SinkRecord record : sinkRecords) {
             String xml = null;
             try {
+
+                System.out.println("Record value >>>>" + record.value());
+
                 String soapXml = jsonToXml.tosSoap((HashMap) record.value());
                 HttpSoapClient httpSoapClient = new HttpSoapClient();
                 String soapResponse = httpSoapClient.sendSoapRequest(soapUrl, soapXml, "");
-                replyProducer.sendRecord(record.key(),soapResponse);
+
+                String correlationIdValue = "";
+                for (Header next : record.headers()) {
+                    //     System.out.println(">>>> HEADERS k: " + next.key() + " v: " + next.value());
+                }
+
+                if (record.headers().lastWithName(correlationIdKey) != null) {
+                    correlationIdValue = record.headers().lastWithName(correlationIdKey).value().toString();
+                }
+
+                System.out.println("Correlation [" + correlationIdKey + "] = [" + correlationIdValue + "]");
+                replyProducer.sendRecord(record.key(), correlationIdKey, correlationIdValue, soapResponse);
                 log.debug("Sending response {}", soapResponse);
             } catch (TransformerException e) {
-                throw new RuntimeException(e);
+                //throw new RuntimeException(e);
+                e.printStackTrace();
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
+                //throw new RuntimeException(e);
             }
             outputStream.println(xml);
         }

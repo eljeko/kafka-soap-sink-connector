@@ -55,6 +55,11 @@ public class SoapSinkConnector extends SinkConnector {
     public static final String REPLY_MESSAGE_BOOTSTRAP_SERVER_DEFAULT_VALUE = "reply-kafka:9092";
     public static final String REPLY_MESSAGE_BOOTSTRAP_SERVER_DOC = "Define reply kafka cluster bootstrap";
 
+    public static final String MESSAGE_CORRELATION_ID_KEY = "correlationid.header.key";
+    public static final String MESSAGE_CORRELATION_ID_KEY_DEFAULT_VALUE = "correlationId";
+    public static final String MESSAGE_CORRELATION_ID_KEY_DOC = "Define the correlation id in messages";
+
+
     public static final String FILE = "file";
     public static final String FILE_DEFAULT_VALUE = "/tmp/fileout";
     public static final String FILE_DOC = "File out";
@@ -67,8 +72,11 @@ public class SoapSinkConnector extends SinkConnector {
     public static final String PRODUCER_BATCH_SIZE_DEFAULT_VALUE = "16384";
     public static final String PRODUCER_BATCH_SIZE_DOC = "Set producer batch.size option";
 
+
     static final ConfigDef CONFIG_DEF = new ConfigDef()
             // filtering
+
+            .define(MESSAGE_CORRELATION_ID_KEY, Type.STRING, MESSAGE_CORRELATION_ID_KEY_DEFAULT_VALUE, Importance.MEDIUM, MESSAGE_CORRELATION_ID_KEY_DOC)
 
             .define(REPLY_MESSAGE_TOPIC, Type.STRING, REPLY_MESSAGE_TOPIC_DEFAULT_VALUE, Importance.HIGH, REPLY_MESSAGE_TOPIC_DOC)
             .define(REPLY_MESSAGE_BOOTSTRAP_SERVER, Type.STRING, REPLY_MESSAGE_BOOTSTRAP_SERVER_DEFAULT_VALUE, Importance.HIGH, REPLY_MESSAGE_BOOTSTRAP_SERVER_DOC)
