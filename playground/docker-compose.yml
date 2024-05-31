@@ -107,6 +107,21 @@ services:
     ports:
       - "8080:8080"
 
+  acme-rest-service:
+    image: acme/acme-rest:1.0
+    container_name: acme-rest
+    ports:
+      - "8084:8084"      
+      
+  acme-ui:
+    image: acme/acme-ui:1.0
+    container_name: acme-ui
+    ports:
+      - "9090:9090"  
+    environment:
+      PORT: 9090
+      ACMERESTAPIURL: '${ACME_REST_API_URL}'      
+
 ###############################
 # Datagen  JR container       #
 ############################### 
