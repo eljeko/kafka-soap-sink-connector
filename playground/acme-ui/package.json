@@ -1,5 +1,5 @@
 {
-  "name": "bookstore-fe",
+  "name": "acme-fe",
   "version": "1.0.0",
   "description": "AcmeInc nodejs front-end",
   "main": "app.js",
